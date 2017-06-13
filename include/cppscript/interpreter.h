@@ -16,15 +16,6 @@ namespace cppscript{
     public:
         interpreter_t();
         void * exec(const char *);
-
-    private:
-        bool next_word(cppscript::script_t &script, word_t &word);
-
-        bool is_frist_word_operator(script_t &script, word_t &word) const;
-
-        bool is_first_word_variable(script_t &script, word_t &word) const;
-
-        bool is_first_word_end_of_line(script_t &script, word_t &word) const;
     };
 }
 #endif //CPPSCRIPT_INTERPRETER_H

@@ -8,6 +8,8 @@
 #include <string>
 
 namespace cppscript{
+    class script_t;
+
     enum word_type_e{
         e_variable,
         e_operator,
@@ -22,12 +24,19 @@ namespace cppscript{
         word_t(const std::string&,word_type_e);
         word_t(const char*,word_type_e);
         word_type_e type(){ return _type; }
+
+        static bool is_first_word_end_of_line(script_t &script, word_t &word);
+
+        static bool is_first_word_variable(script_t &script, word_t &word);
+
+        static bool is_frist_word_operator(script_t &script, word_t &word);
     };
     class script_t :public std::string{
     public:
         int current_index;
         word_type_e last_word_type;
         script_t(const char *);
+        bool next_word(word_t &word);
     };
 
 }
