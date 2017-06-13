@@ -19,9 +19,25 @@ int i = 0;
 int j = 1;
 int k = 2;
 
-int foo(int i,int k) {
+int foo(int i, int k) {
     std::cout << "a\n";
 }
+
+test(i{
+        "i":{
+            "赋值函数":operator=(int & i, int & value);
+        };
+        "j":{
+            "赋值函数":operator=(int & i, int & value);
+        };
+        "k":{
+            "赋值函数":operator=(int & i, int & value);
+        };
+        "foo":{
+            "调用"：
+        }
+})
+
 
 int main() {
     /*

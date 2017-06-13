@@ -13,9 +13,19 @@ public:
         std::cout << "My name is " << name << " age " << age << "." << std::endl;
     }
 };
+
+
+student_t foo(){
+    return student_t();
+}
+
+
+
 #if 1
 static student_t student;
 int main() {
+    student = foo();
+    foo();
     student.introduce_self();
     return 0;
 }

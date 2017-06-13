@@ -18,7 +18,6 @@ void *cppscript::interpreter_t::exec(const char *text) {
     for (;;) {
         word_t word;
         next_word(script, word);
-        cout << word << '\t';
         if (word.type() == e_variable) {
             variable_stack.push(word);
         } else if (word.type() == e_operator) {
@@ -40,7 +39,18 @@ void *cppscript::interpreter_t::exec(const char *text) {
             break;
         }
     }
-
+    cout << "variable_stack:";
+    while(!variable_stack.empty()){
+        cout << ' ' << variable_stack.top();
+        variable_stack.pop();
+    }
+    cout << '\n';
+    cout << "operator_stack:";
+    while(!operator_stack.empty()){
+        cout << ' ' << operator_stack.top();
+        operator_stack.pop();
+    }
+    cout << '\n';
     return nullptr;
 }
 
