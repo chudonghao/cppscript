@@ -8,14 +8,14 @@
 #include <set>
 #include <map>
 #include <string>
-#include "interpreter.h"
+#include "cppscript/interpreter.h"
 #include "thread.h"
-#include "debug.h"
+#include "cppscript/debug.h"
 namespace cppscript {
     class thread_t;
     class operator_t {
     public:
-        typedef void(* pop_func_t)(cppscript::thread_t*);
+        typedef void(* pop_func_t)(cppscript::thread_t*,std::vector<variable_t*>::iterator variable_after);
         enum associativity_e{
             left_to_right,
             right_to_left
@@ -35,10 +35,10 @@ namespace cppscript {
         int priority;
         associativity_e associativity;
 
-        void call_pop_func(cppscript::thread_t * thread) {
+        void call_pop_func(cppscript::thread_t * thread,std::vector<variable_t*>::iterator variable_after) {
             CPPSCRIPT_ASSERT(thread != nullptr);
             CPPSCRIPT_ASSERT(func != nullptr);
-            func(thread);
+            func(thread,variable_after);
         }
 
         static operator_t *ptr(const std::string &name) {

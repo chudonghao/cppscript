@@ -29,8 +29,6 @@ namespace cppscript {
 
         type_e type() { return _type; }
 
-        static bool is_first_word_end_of_line(script_t &script, word_t &word);
-
         static bool is_first_word_variable(script_t &script, word_t &word);
 
         static bool is_frist_word_operator(script_t &script, word_t &word);

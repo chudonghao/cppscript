@@ -6,7 +6,7 @@
 #define CPPSCRIPT_VARIABLE_H
 
 
-#include "assert.h"
+#include "cppscript/assert.h"
 #include <string>
 #include <map>
 #include <functional>
