@@ -9,8 +9,8 @@
 #include <string>
 #include <type_traits>
 #include <vector>
-#include "cppscript/cpp/variable.h"
-#include "cppscript/script/operator.h"
+#include "cppscript/variable.h"
+#include "cppscript/operator.h"
 #include "cppscript/debug.h"
 
 namespace cppscript {

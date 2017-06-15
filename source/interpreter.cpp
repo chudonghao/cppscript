@@ -12,7 +12,6 @@ using namespace cppscript;
 using namespace std;
 
 void *cppscript::interpreter_t::exec(const char *text) {
-//    stack<void*> variable_name_stack;
     CPPSCRIPT_ASSERT(text != nullptr);
     int current_operator_priority_level = 0;
     typedef struct{
@@ -20,6 +19,9 @@ void *cppscript::interpreter_t::exec(const char *text) {
         int priority;
     } operator_in_stack_t;
     stack<operator_in_stack_t> operator_stack = stack<operator_in_stack_t>();
+    vector<variable_t*> variables = vector<variable_t*>();
+    variables.push_back(nullptr);
+
     thread_t thread;
     script_t script(text);
     for (;;) {
@@ -27,8 +29,9 @@ void *cppscript::interpreter_t::exec(const char *text) {
         bool is_valued = script.next_word(word);
         if (is_valued) {
             if (word.type() == word_t::e_variable) {
-                thread.push(variable_t::ptr(word));
+                variables.push_back(variable_t::ptr(word));
             } else if (word.type() == word_t::e_operator) {
+                vector<variable_t*>::iterator variable_after = script.last_word_type==word_t::e_variable?--variables.end():variables.end();
                 operator_t *current_operator = operator_t::ptr(word);
                 CPPSCRIPT_ASSERT(current_operator != nullptr);
 
@@ -36,11 +39,11 @@ void *cppscript::interpreter_t::exec(const char *text) {
 
                 while (!operator_stack.empty()) {
                     if (current_operator->priority + current_operator_priority_level < operator_stack.top().priority) {
-                        operator_stack.top().operator_->call_pop_func(&thread);
+                        operator_stack.top().operator_->call_pop_func(&thread,variable_after);
                         operator_stack.pop();
                     } else if (current_operator->priority + current_operator_priority_level == operator_stack.top().priority) {
                         if (operator_stack.top().operator_->associativity == operator_t::left_to_right) {
-                            operator_stack.top().operator_->call_pop_func(&thread);
+                            operator_stack.top().operator_->call_pop_func(&thread,variable_after);
                             operator_stack.pop();
                         } else continue;
                     } else {
@@ -62,6 +65,7 @@ void *cppscript::interpreter_t::exec(const char *text) {
                 //TODO: throw error.
                 break;
             }
+            script.last_word_type = word.type();
         } else {
             break;
         }

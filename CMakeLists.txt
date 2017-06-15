@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.7.2)
 project(cppscript)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_COMPILER clang++)
@@ -25,7 +25,7 @@ add_library(cppscript
         source/variable.cpp
         include/cppscript/variable.h
         include/cppscript/debug.h
-        include/cppscript/detail/operator.h source/cppscript.cpp source/compiler.cpp include/cppscript/compiler.h)
+        source/cppscript.cpp source/context.cpp include/cppscript/context.h)
 
 add_executable(demo example/demo/main.cpp)
 target_link_libraries(demo cppscript)

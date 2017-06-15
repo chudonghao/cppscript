@@ -22,34 +22,17 @@ int j = 1;
 int k = 2;
 
 int foo(int i, int k) {
-    std::cout << "a\n";
+    std::cout << "i + j = " << i + k << '\n';
+    return i + k;
 }
 
 int main() {
     def("i", &i);
     def("j", &j);
     def("k", &k);
-    def<int,int,int>("foo", &foo);
+    def<int, int, int>("foo", &foo);
 
-
-
-    /*
-     * if(";"){
-     *      清栈；
-     * }
-     * if(")"){
-     *      "k",
-     * }
-     * if(","){
-     *      "j"
-     * }
-     * if("("){
-     *      "foo",调用 foo,出2次,返回值入1次
-     * }
-     * if("="){
-     *      "i",调用 i=返回值，出栈1次,入栈一次
-     * }
-     */
     interpreter_t interpreter;
     interpreter.exec("i=foo(foo(j,k),foo(j,k));");
+    cout <<"i 应该是 6：" << i << endl;
 }
