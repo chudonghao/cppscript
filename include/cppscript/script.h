@@ -6,8 +6,11 @@
 #define CPPSCRIPT_SCRIPT_H
 
 #include <string>
+#include <vector>
 
 namespace cppscript {
+    void separate_script_by_syntax(const std::string& script, std::vector<std::string>& words);
+
     class script_t;
 
     class word_t : public std::string {

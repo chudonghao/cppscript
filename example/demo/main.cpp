@@ -33,6 +33,6 @@ int main() {
     def<int, int, int>("foo", &foo);
 
     interpreter_t interpreter;
-    interpreter.exec("i=foo(foo(j,k),foo(j,k));");
+    interpreter.exec("i=foo(foo(j,k),foo( j,k));");
     cout <<"i 应该是 6：" << i << endl;
 }

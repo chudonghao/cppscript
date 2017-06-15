@@ -12,16 +12,26 @@
 #include "thread.h"
 #include "cppscript/debug.h"
 namespace cppscript {
-    class thread_t;
-    class operator_t {
-    public:
-        typedef void(* pop_func_t)(cppscript::thread_t*,std::vector<variable_t*>::iterator variable_after);
+
+    typedef struct{
         enum associativity_e{
             left_to_right,
             right_to_left
         };
+        std::string name;
+        int priority;
+        int associativity;
+    } operator_info_t;
+    extern operator_info_t operator_info_table[5];
+
+
+    class thread_t;
+    class operator_t {
+    public:
+        typedef void(* pop_func_t)(cppscript::thread_t*,std::vector<variable_t*>::iterator variable_after);
+
     protected:
-        operator_t(int priority,associativity_e associativity,pop_func_t func):associativity(associativity),priority(priority),func(func){}
+        operator_t(int priority,operator_info_t::associativity_e associativity,pop_func_t func):associativity(associativity),priority(priority),func(func){}
     public:
         static std::map<std::string, operator_t*> operators;
 
@@ -33,7 +43,7 @@ namespace cppscript {
          * */
         pop_func_t func;
         int priority;
-        associativity_e associativity;
+        operator_info_t::associativity_e associativity;
 
         void call_pop_func(cppscript::thread_t * thread,std::vector<variable_t*>::iterator variable_after) {
             CPPSCRIPT_ASSERT(thread != nullptr);
