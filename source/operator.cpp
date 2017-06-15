@@ -110,19 +110,19 @@ const std::map<std::string, int> precedence_of_operators = {
 };
 
 std::map<std::string, operator_t*> cppscript::operator_t::operators = {
-        {";",new operator_t(0,[](thread_t*thread){
+        {";",new operator_t(0,left_to_right,[](thread_t*thread){
             cout << ";\n";
         })},
-        {"=",new operator_t(1,[](thread_t*thread){
-            cout << "=\n";
-        })},
-        {",",new operator_t(2,[](thread_t*thread){
+        {",",new operator_t(1,right_to_left,[](thread_t*thread){
             cout << ",\n";
         })},
-        {")",new operator_t(3,[](thread_t*thread){
+        {"=",new operator_t(2,right_to_left,[](thread_t*thread){
+            cout << "=\n";
+        })},
+        {")",new operator_t(3,left_to_right,[](thread_t*thread){
             cout << ")\n";
         })},
-        {"(",new operator_t(3,[](thread_t*thread){
+        {"(",new operator_t(4,right_to_left,[](thread_t*thread){
             cout << "(\n";
         })},
 

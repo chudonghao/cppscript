@@ -15,9 +15,13 @@ namespace cppscript {
     class thread_t;
     class operator_t {
     public:
-        typedef void(* on_pop_func_t)(cppscript::thread_t*);
+        typedef void(* pop_func_t)(cppscript::thread_t*);
+        enum associativity_e{
+            left_to_right,
+            right_to_left
+        };
     protected:
-        operator_t(int priority,on_pop_func_t func):priority(priority),func(func){}
+        operator_t(int priority,associativity_e associativity,pop_func_t func):associativity(associativity),priority(priority),func(func){}
     public:
         static std::map<std::string, operator_t*> operators;
 
@@ -27,10 +31,11 @@ namespace cppscript {
          * 1. 入栈
          * 2. 进行出栈操作
          * */
-        on_pop_func_t func;
+        pop_func_t func;
         int priority;
+        associativity_e associativity;
 
-        void operator()(cppscript::thread_t * thread) {
+        void call_pop_func(cppscript::thread_t * thread) {
             CPPSCRIPT_ASSERT(thread != nullptr);
             CPPSCRIPT_ASSERT(func != nullptr);
             func(thread);
@@ -43,6 +48,11 @@ namespace cppscript {
                 //TODO: throw error
             }
             return operators.find(name)->second;
+        }
+
+        static int num_priority(){
+            //TODO may be more
+            return 16;
         }
     };
 }

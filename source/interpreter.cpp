@@ -14,7 +14,12 @@ using namespace std;
 void *cppscript::interpreter_t::exec(const char *text) {
 //    stack<void*> variable_name_stack;
     CPPSCRIPT_ASSERT(text != nullptr);
-
+    int current_operator_priority_level = 0;
+    typedef struct{
+        operator_t*operator_;
+        int priority;
+    } operator_in_stack_t;
+    stack<operator_in_stack_t> operator_stack = stack<operator_in_stack_t>();
     thread_t thread;
     script_t script(text);
     for (;;) {
@@ -24,7 +29,32 @@ void *cppscript::interpreter_t::exec(const char *text) {
             if (word.type() == word_t::e_variable) {
                 thread.push(variable_t::ptr(word));
             } else if (word.type() == word_t::e_operator) {
-                operator_t::ptr(word)->operator()(&thread);
+                operator_t *current_operator = operator_t::ptr(word);
+                CPPSCRIPT_ASSERT(current_operator != nullptr);
+
+                CPPSCRIPT_DEBUG() << word << ":" << current_operator_priority_level + current_operator->priority << endl;
+
+                while (!operator_stack.empty()) {
+                    if (current_operator->priority + current_operator_priority_level < operator_stack.top().priority) {
+                        operator_stack.top().operator_->call_pop_func(&thread);
+                        operator_stack.pop();
+                    } else if (current_operator->priority + current_operator_priority_level == operator_stack.top().priority) {
+                        if (operator_stack.top().operator_->associativity == operator_t::left_to_right) {
+                            operator_stack.top().operator_->call_pop_func(&thread);
+                            operator_stack.pop();
+                        } else continue;
+                    } else {
+                        break;
+                    }
+                }
+                operator_stack.push({current_operator,current_operator->priority + current_operator_priority_level});
+
+                if (word.compare("(") == 0) {
+                    current_operator_priority_level += operator_t::num_priority();
+                } else if (word.compare(")") == 0) {
+                    current_operator_priority_level -= operator_t::num_priority();
+                }
+
             } else if (word.type() == word_t::e_end_of_text) {
 
                 break;
