@@ -11,9 +11,9 @@
 #define CPPSCRIPT_THREAD_STACK_LENGTH 1024
 
 
+#include "thread.h"
 #include "variable.h"
 #include "interpreter.h"
-#include "thread.h"
 #include "operator.h"
 
 namespace cppscript{

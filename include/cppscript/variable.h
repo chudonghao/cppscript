@@ -6,18 +6,20 @@
 #define CPPSCRIPT_VARIABLE_H
 
 
-#include "cppscript/assert.h"
 #include <string>
 #include <map>
 #include <functional>
+#include <type_traits>
+#include "script.h"
+#include "assert.h"
 
 namespace cppscript {
     class variable_t1;
     class function_t;
+
     class variable_t {
-    protected:
-        static std::map<std::string,variable_t*> variables;
     public:
+        static std::map<std::string,variable_t*> variables;
         enum type_e {
             e_variable,
             e_function
@@ -58,8 +60,9 @@ namespace cppscript {
             behavior_map[behavior] = func;
         }
 
-        template<typename T, class>
-        friend variable_t1 &def(const std::string &name, T variable_ptr);
+//        template<typename T, class>
+//        friend variable_t1 &def(const std::string &name, T variable_ptr);
+        static variable_t1 &def_variable(const std::string&name,void*ptr);
     };
 
     class function_t:public variable_t {
@@ -84,7 +87,7 @@ namespace cppscript {
     };
 
     template<typename ret_t>
-    void def(const std::string &name, ret_t(*func)()) {
+    void cppscript::def(const std::string &name, ret_t(*func)()) {
         function_t *function = new function_t(variable_t::e_function,(void *)&func);
         function_t::variables[name] = function;
         function->construct_result = [function](void **result_ptr, void **argv) {
@@ -99,7 +102,7 @@ namespace cppscript {
     };
 
     template<typename ret_t, typename argv1_t>
-    void def(const std::string &name, ret_t(*func)(argv1_t)) {
+    void cppscript::def(const std::string &name, ret_t(*func)(argv1_t)) {
         function_t *function = new function_t(variable_t::e_function,(void *)&func);
         function_t::variables[name] = function;
         function->construct_result = [function](void **result_ptr, void **argv) {
@@ -114,7 +117,7 @@ namespace cppscript {
     };
 
     template<typename ret_t, typename argv1_t, typename argv2_t>
-    void def(const std::string &name, ret_t(*func)(argv1_t, argv2_t)) {
+    void cppscript::def(const std::string &name, ret_t(*func)(argv1_t, argv2_t)) {
         function_t *function = new function_t(variable_t::e_function,(void *)&func);
         function_t::variables[name] = function;
         function->construct_result = [function](void **result_ptr, void **argv) {
@@ -128,14 +131,6 @@ namespace cppscript {
             delete ((ret_t *) *result_ptr);
         };
     };
-
-    template<typename T, class = typename std::enable_if<std::is_pointer<T>::value>::type>
-    variable_t1 &def(const std::string &name, T variable_ptr) {
-        CPPSCRIPT_ASSERT(variable_ptr);
-        auto variable = new variable_t1(variable_t::e_variable, variable_ptr);
-        variable_t1::variables[name] = variable;
-        return *variable;
-    }
 }
 
 

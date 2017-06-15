@@ -3,14 +3,9 @@
 //
 
 #include <boost/function.hpp>
-#include <boost/bind.hpp>
-#include <cppscript/operator.h>
-#include <iostream>
+#include <cppscript/cppscript.h>
+
 #include <list>
-#include <stack>
-#include <map>
-#include <cppscript/interpreter.h>
-#include <cppscript/assert.h>
 
 #define test(x)
 
@@ -27,10 +22,10 @@ int foo(int i, int k) {
 }
 
 int main() {
-    def("i", &i);
-    def("j", &j);
-    def("k", &k);
-    def<int, int, int>("foo", &foo);
+//    variable_t1::def_variable("i", &i);
+//    variable_t1::def_variable("j", &j);
+//    variable_t1::def_variable("k", &k);
+//    def<int, int, int>("foo", &foo);
 
     interpreter_t interpreter;
     interpreter.exec("i=foo(foo(j,k),foo( j,k));");

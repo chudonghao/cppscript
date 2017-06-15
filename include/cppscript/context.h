@@ -16,7 +16,7 @@ namespace cppscript {
         std::vector<void *> var_table;
     };
 
-    class context {
+    class context_t {
     public:
         std::vector<void *> temp_variables;
         std::vector<call_info_t *> call_queue;

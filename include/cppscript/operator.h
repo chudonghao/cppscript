@@ -8,27 +8,32 @@
 #include <set>
 #include <map>
 #include <string>
+
 #include "cppscript/interpreter.h"
 #include "thread.h"
 #include "cppscript/debug.h"
+#include "variable.h"
+
 namespace cppscript {
 
-    typedef struct{
+    class operator_info_t{
+    public:
         enum associativity_e{
             left_to_right,
             right_to_left
         };
-        std::string name;
+//        std::string name;
         int priority;
         int associativity;
-    } operator_info_t;
-    extern operator_info_t operator_info_table[5];
+    };
+
+    extern std::map<std::string,operator_info_t> operator_info_table;
 
 
     class thread_t;
     class operator_t {
     public:
-        typedef void(* pop_func_t)(cppscript::thread_t*,std::vector<variable_t*>::iterator variable_after);
+        typedef void(* pop_func_t)(thread_t*,std::vector<variable_t*>::iterator variable_after);
 
     protected:
         operator_t(int priority,operator_info_t::associativity_e associativity,pop_func_t func):associativity(associativity),priority(priority),func(func){}

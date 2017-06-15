@@ -7,15 +7,23 @@
 #include <cppscript/script.h>
 #include <iostream>
 #include <cppscript/thread.h>
+#include <cppscript/context.h>
 
 using namespace cppscript;
 using namespace std;
 
 void *cppscript::interpreter_t::exec(const char *text) {
     CPPSCRIPT_ASSERT(text != nullptr);
-    std::vector<string> words = std::vector<string>();
+    auto words = std::vector<word_t>();
     separate_script_by_syntax(text,words);
+
+    context_t context;
+
+    stack<string> word_stack;
     for(int i = 0;i<words.size();++i){
+
+
+
         CPPSCRIPT_DEBUG() << words[i] << '\n';
     }
 

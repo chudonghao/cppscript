@@ -13,19 +13,22 @@ target_link_libraries(ask_python boost_python python2.7)
 
 add_library(cppscript
         include/cppscript/interpreter.h
-        source/interpreter.cpp
         include/cppscript/script.h
-        source/script.cpp
         include/cppscript/cppscript.h
-        source/assert.cpp
         include/cppscript/operator.h
-        source/operator.cpp
-        source/thread.cpp
         include/cppscript/thread.h
-        source/variable.cpp
         include/cppscript/variable.h
+        include/cppscript/context.h
         include/cppscript/debug.h
-        source/cppscript.cpp source/context.cpp include/cppscript/context.h)
+        source/assert.cpp
+        source/context.cpp
+        source/cppscript.cpp
+        source/interpreter.cpp
+        source/operator.cpp
+        source/script.cpp
+        source/thread.cpp
+        source/variable.cpp
+        )
 
 add_executable(demo example/demo/main.cpp)
 target_link_libraries(demo cppscript)

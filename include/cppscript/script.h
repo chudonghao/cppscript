@@ -7,12 +7,12 @@
 
 #include <string>
 #include <vector>
+#include "operator.h"
 
 namespace cppscript {
-    void separate_script_by_syntax(const std::string& script, std::vector<std::string>& words);
 
     class script_t;
-
+    struct operator_info_t;
     class word_t : public std::string {
     public:
         enum type_e {
@@ -32,10 +32,10 @@ namespace cppscript {
 
         type_e type() { return _type; }
 
-        static bool is_first_word_variable(script_t &script, word_t &word);
-
-        static bool is_frist_word_operator(script_t &script, word_t &word);
+        cppscript::operator_info_t * get_mapping_operator();
     };
+
+    void separate_script_by_syntax(const std::string& script, std::vector<word_t>& words);
 
     class script_t : public std::string {
     public:

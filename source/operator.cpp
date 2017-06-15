@@ -7,12 +7,12 @@ using namespace cppscript;
 using namespace std;
 using namespace cppscript;
 
-operator_info_t cppscript::operator_info_table[5] = {
-        {",",1, operator_info_t::right_to_left},
-        {"=",2, operator_info_t::right_to_left},
-        {")",3, operator_info_t::left_to_right},
-        {"(",4, operator_info_t::right_to_left},
-        {";",4, operator_info_t::left_to_right}
+map<string,operator_info_t> cppscript::operator_info_table = {
+        {",",{1, operator_info_t::right_to_left}},
+        {"=",{2, operator_info_t::right_to_left}},
+        {")",{3, operator_info_t::left_to_right}},
+        {"(",{4, operator_info_t::right_to_left}},
+        {";",{4, operator_info_t::left_to_right}}
 };
 //
 //std::map<std::string, operator_t*> cppscript::operator_t::operators = {
