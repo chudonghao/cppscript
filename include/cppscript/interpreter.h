@@ -8,8 +8,7 @@
 #include <string>
 #include <stack>
 #include "script.h"
-
-#define CPPSCRIPT_MAX_VARIABLE_LENGTH 64
+#include "cppscript.h"
 
 namespace cppscript{
     class interpreter_t{

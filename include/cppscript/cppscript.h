@@ -5,19 +5,18 @@
 #ifndef CPPSCRIPT_CPPSCRIPT_H
 #define CPPSCRIPT_CPPSCRIPT_H
 
-#include <map>
-#include <string>
+#define CPPSCRIPT_MAX_VARIABLE_NAME_LENGTH 64
+#define CPPSCRIPT_MAX_VARIABLE_SIZE 1024
 
-class def_t{
+#define CPPSCRIPT_THREAD_STACK_LENGTH 1024
 
-};
-std::map<std::string,def_t> def_map;
 
-template <typename T>
-def_t& def(const char*,T t){
+#include "variable.h"
+#include "interpreter.h"
+#include "thread.h"
+#include "operator.h"
 
+namespace cppscript{
 }
-
-
 
 #endif //CPPSCRIPT_CPPSCRIPT_H

@@ -9,11 +9,13 @@
 #include <list>
 #include <stack>
 #include <map>
-#include <set>
 #include <cppscript/interpreter.h>
+#include <cppscript/assert.h>
 
 #define test(x)
 
+using namespace std;
+using namespace cppscript;
 
 int i = 0;
 int j = 1;
@@ -23,23 +25,14 @@ int foo(int i, int k) {
     std::cout << "a\n";
 }
 
-test(i{
-        "i":{
-            "赋值函数":operator=(int & i, int & value);
-        };
-        "j":{
-            "赋值函数":operator=(int & i, int & value);
-        };
-        "k":{
-            "赋值函数":operator=(int & i, int & value);
-        };
-        "foo":{
-            "调用"：
-        }
-})
-
-
 int main() {
+    def("i", &i);
+    def("j", &j);
+    def("k", &k);
+    def<int,int,int>("foo", &foo);
+
+
+
     /*
      * if(";"){
      *      清栈；
@@ -57,6 +50,6 @@ int main() {
      *      "i",调用 i=返回值，出栈1次,入栈一次
      * }
      */
-    cppscript::interpreter_t interpreter;
-    interpreter.exec("i=foo(j,k);");
+    interpreter_t interpreter;
+    interpreter.exec("i=foo(foo(j,k),foo(j,k));");
 }

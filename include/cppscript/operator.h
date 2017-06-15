@@ -8,107 +8,42 @@
 #include <set>
 #include <map>
 #include <string>
-
+#include "interpreter.h"
+#include "thread.h"
+#include "debug.h"
 namespace cppscript {
-    const std::set<std::string> operators = {
-//            "后置++",
-//            "后置--",
-            "[",
-            "]",
-            "(",
-            ")",
-            ".",
-            "->",
-            "-",
-//            "(类型)",
-//            "前置++",
-//            "前置--",
-            "*",
-//            "&取地址",
-            "!",
-            "~",
-//            "sizeof",
-            "/",
-            "*",
-            "%",
-            "+",
-            "-",
-            "<<",
-            ">>",
-            ">",
-            ">=",
-            "<",
-            "<=",
-            "==",
-            "!=",
-            "&",
-            "^",
-            "|",
-            "&&",
-            "||",
-            "?:",
-            "=",
-            "/=",
-            "*=",
-            "%=",
-            "+=",
-            "-=",
-            "<<=",
-            ">>=",
-            "&=",
-            "^=",
-            "|=",
-            ","
-    };
-    const std::map<std::string, int> precedence_of_operators = {
-//            {"后置++",   1},
-//            {"后置--",   1},
-            {"[",   1},
-            {"]",   1},
-            {"(",   1},
-            {")",   1},
-            {".",   1},
-            {"->",  1},
-            {"-",   2},
-//            {"(类型)",   2},
-//            {"前置++",   2},
-//            {"前置--",   2},
-            {"*",   2},
-//            {"&取地址",   2},
-            {"!",   2},
-            {"~",   2},
-//            {"sizeof", 2},
-            {"/",   3},
-            {"*",   3},
-            {"%",   3},
-            {"+",   4},
-            {"-",   4},
-            {"<<",  5},
-            {">>",  5},
-            {">",   6},
-            {">=",  6},
-            {"<",   6},
-            {"<=",  6},
-            {"==",  7},
-            {"!=",  7},
-            {"&",   8},
-            {"^",   9},
-            {"|",   10},
-            {"&&",  11},
-            {"||",  12},
-            {"?:",  13},
-            {"=",   14},
-            {"/=",  14},
-            {"*=",  14},
-            {"%=",  14},
-            {"+=",  14},
-            {"-=",  14},
-            {"<<=", 14},
-            {">>=", 14},
-            {"&=",  14},
-            {"^=",  14},
-            {"|=",  14},
-            {",",   15}
+    class thread_t;
+    class operator_t {
+    public:
+        typedef void(* on_pop_func_t)(cppscript::thread_t*);
+    protected:
+        operator_t(int priority,on_pop_func_t func):priority(priority),func(func){}
+    public:
+        static std::map<std::string, operator_t*> operators;
+
+        /**
+         * TODO: do something
+         * 根据operator类型进行以下操作
+         * 1. 入栈
+         * 2. 进行出栈操作
+         * */
+        on_pop_func_t func;
+        int priority;
+
+        void operator()(cppscript::thread_t * thread) {
+            CPPSCRIPT_ASSERT(thread != nullptr);
+            CPPSCRIPT_ASSERT(func != nullptr);
+            func(thread);
+        }
+
+        static operator_t *ptr(const std::string &name) {
+            CPPSCRIPT_ASSERT(operators.find(name) != operators.end());
+            auto operator_ = operators.find(name);
+            if(operator_ == operators.end()){
+                //TODO: throw error
+            }
+            return operators.find(name)->second;
+        }
     };
 }
 #endif //STUDYLIBS_OPERATOR_H
