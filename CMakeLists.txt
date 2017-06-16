@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.7.2)
 project(cppscript)
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_COMPILER clang++)
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 

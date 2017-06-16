@@ -22,17 +22,19 @@ namespace cppscript {
             e_end_of_text,
             e_undefined
         };
-        type_e _type;
+        type_e type_;
+        void*mapping;
 
         word_t();
 
-        word_t(const std::string &, type_e);
+        word_t(const std::string &, type_e,void*mapping);
 
-        word_t(const char *, type_e);
+        word_t(const char *, type_e,void*mapping);
 
-        type_e type() { return _type; }
+        type_e type() { return type_; }
 
-        cppscript::operator_info_t * get_mapping_operator();
+        cppscript::operator_info_t * get_operator_mapping();
+
     };
 
     void separate_script_by_syntax(const std::string& script, std::vector<word_t>& words);
@@ -43,8 +45,6 @@ namespace cppscript {
         cppscript::word_t::type_e last_word_type;
 
         script_t(const char *);
-
-        bool next_word(word_t &word);
     };
 
 }

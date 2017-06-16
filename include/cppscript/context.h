@@ -12,7 +12,7 @@ namespace cppscript {
 
     class call_info_t {
     public:
-        cppscript::function_t *function;
+//        cppscript::function_t *function;
         std::vector<void *> var_table;
     };
 

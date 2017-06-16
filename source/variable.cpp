@@ -1,3 +1,5 @@
+#include <cppscript/variable.h>
+
 ////
 //// Created by chudonghao on 17-6-15.
 ////
@@ -26,3 +28,15 @@
 ////    variable_t1::variables[name] = variable;
 ////    return *variable;
 ////}
+namespace cppscript{
+
+    void *function_call_t::value() {
+        if(!value_)
+            invoke();
+        return value_;
+    }
+
+    variable_t *get_variable(const std::string &name) {
+        return nullptr;
+    }
+}
