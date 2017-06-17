@@ -7,51 +7,49 @@
 
 #include <list>
 #include <string>
+#include <vector>
+#include "assert.h"
 
 namespace cppscript {
-    class base_t {
-    public:
-        ~base_t() {}
-    };
 
-    class variable_t : public base_t {
+    class variable_t{
     protected:
         void *value_;
     public:
+        virtual ~variable_t();
+
         virtual void *value(){ return value_;};
-
-        virtual bool is_real_variable() { return false; }
-
-        virtual bool is_function_call_instance() { return false; }
     };
 
-    class real_variable_t : public variable_t {
-
+    class variable_instance_t{
+        void *variable_ptr;
     public:
-        real_variable_t():variable_t(){}
+        variable_instance_t():variable_ptr(){};
+        variable_instance_t(variable_t*variable);
 
-        bool is_real_variable() override { return true;}
+        virtual ~variable_instance_t();
+
+        virtual void *ptr(){ return variable_ptr;};
     };
 
-    class function_call_t : public variable_t {
-
-        std::list<variable_t *> argv_;
+    class function_variable_instance_t:public variable_instance_t{
+        std::vector<cppscript::variable_instance_t*> args;
     public:
-        function_call_t():variable_t(),argv_(){}
+        function_variable_instance_t():args(){};
+        function_variable_instance_t(variable_t *variable): variable_instance_t(variable),args(){};
 
-        bool is_function_call_instance() override { return true; }
+        ~function_variable_instance_t() override;
 
-        virtual void *value();
+        void *ptr() override;
 
-        void invoke();
-
+        void push(cppscript::variable_instance_t*arg){
+            CPPSCRIPT_ASSERT(arg!= nullptr);
+            args.push_back(arg);
+        }
     };
-    class real_variable_instance_t{
-
-    };
 
 
-    static variable_t *get_variable(const std::string&name);
+    variable_t *get_variable(const std::string&name);
 //    class variable_t1;
 //    class function_t;
 //

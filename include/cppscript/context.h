@@ -7,23 +7,21 @@
 
 #include <vector>
 #include "variable.h"
+#include "assert.h"
+#include "cppscript.h"
 
 namespace cppscript {
 
-    class call_info_t {
+    class thread_context_t {
     public:
-//        cppscript::function_t *function;
-        std::vector<void *> var_table;
-    };
+        thread_context_t();
+        variable_instance_t variable_stack[CPPSCRIPT_THREAD_STACK_LENGTH];
+        size_t bp;
+        size_t sp;
+        size_t func;
 
-    class context_t {
-    public:
-        std::vector<void *> temp_variables;
-        std::vector<call_info_t *> call_queue;
-
-        template<typename T>
-        void push(T variable) {
-        }
+        void push(const variable_instance_t&variable_instance);
+        void pop();
     };
 
 }

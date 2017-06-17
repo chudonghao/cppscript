@@ -8,52 +8,138 @@
 
 using namespace cppscript;
 using namespace std;
-namespace cppscript{
+namespace cppscript {
     void *interpreter_t::exec(const char *text) {
         CPPSCRIPT_ASSERT(text != nullptr);
-        auto words = vector<word_t>();
+        auto words = list<word_t>();
+        auto thread_stack = vector<variable_instance_t>();
+        CPPSCRIPT_ASSERT("ll\n");
+        thread_context_t t;
+
+
         separate_script_by_syntax(text, words);
+        for(string word:words)
+            cout <<"\t"<< word;
+        cout << endl;
 
-        context_t context;
-
-        stack<word_t *> word_stack;
+        stack<list<word_t>::iterator> operator_word_stack;
         stack<int> priority_stack;
         int priority_level = 0;
-        for (vector<word_t>::iterator iter = words.begin();iter!=words.end();++iter) {
+        for (list<word_t>::iterator iter = words.begin();; ++iter) {
+            if (words.end() == iter) {
+                for (; !operator_word_stack.empty();) {
+                    auto word_before = operator_word_stack.top();
+                    auto word = operator_word_stack.top();
+                    auto word_after = operator_word_stack.top();
+                    --word_before;
+                    ++word_after;
+                    if((*word == ")"||*word == ",") && (word_before)->type() == word_t::e_variable){
+                        auto *variable_mapping = (word_before)->get_variable_mapping();
+                        CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_before)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                        words.erase(word_before);
+                        words.erase(word);
+                    }else if(*word == "("){
+                        auto *variable_mapping = (word_before)->get_variable_mapping();
+                        CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_before)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                        words.erase(word);
+                    }else if(*word == "="){
+                        auto *variable_mapping = (word_before)->get_variable_mapping();
+                        CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_before)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                        words.erase(word_before);
+                        variable_mapping = (word_after)->get_variable_mapping();
+                        CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_after)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                        words.erase(word_after);
+                    }else if(*word == ";"){
+                        auto *variable_mapping = (word_after)->get_variable_mapping();
+                        CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_after)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                        words.erase(word_after);
+                    }
 
+//                        word->get_operator_mapping()->operator()(&t);
+                    operator_word_stack.pop();
+                    priority_stack.pop();
+                    for(string word:words)
+                        cout <<"\t"<< word;
+                    cout << endl;
+                }
+                break;
+            }
             if (iter->type() == word_t::e_operator) {
-                operator_info_t *operator_mapping = iter->get_operator_mapping();
+                operator_t *operator_mapping = iter->get_operator_mapping();
+                //pop(0-?times)
                 for (bool do_pop;;) {
                     do_pop = false;
-                    if (!word_stack.empty())
+                    if (!operator_word_stack.empty())
                         if (priority_stack.top() == priority_level + operator_mapping->priority) {
-                            if (word_stack.top()->get_operator_mapping()->associativity == operator_info_t::left_to_right) {
+                            if (operator_word_stack.top()->get_operator_mapping()->associativity ==
+                                operator_t::left_to_right) {
                                 do_pop = true;
                             }
                         } else if (priority_stack.top() > priority_level + operator_mapping->priority) {
                             do_pop = true;
                         }
                     if (do_pop) {
-                        word_t *word = word_stack.top();
-                        cout << *word << endl;
-                        word_stack.pop();
+                        auto word_before = operator_word_stack.top();
+                        auto word = operator_word_stack.top();
+                        auto word_after = operator_word_stack.top();
+                        --word_before;
+                        ++word_after;
+                        if((*word == ")"||*word == ",") && (word_before)->type() == word_t::e_variable){
+                            auto *variable_mapping = (word_before)->get_variable_mapping();
+                            CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_before)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                            words.erase(word_before);
+                            words.erase(word);
+                        }if(*word == "("){
+                            auto *variable_mapping = (word_before)->get_variable_mapping();
+                            CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_before)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                            words.erase(word);
+                        }if(*word == "="){
+                            auto *variable_mapping = (word_before)->get_variable_mapping();
+                            CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_before)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                            words.erase(word_before);
+                            variable_mapping = (word_after)->get_variable_mapping();
+                            CPPSCRIPT_ASSERT(variable_mapping != nullptr);
+//                            cout << ":push " << *(word_after)<< endl;
+//                            t.push(variable_instance_t(variable_mapping));
+                            words.erase(word_after);
+                        }
+
+//                        word->get_operator_mapping()->operator()(&t);
+                        operator_word_stack.pop();
                         priority_stack.pop();
+                        for(string word:words)
+                            cout <<"\t"<< word;
+                        cout << endl;
                     } else {
                         break;
                     }
                 }
-                word_stack.push(&*iter);
+                operator_word_stack.push(iter);
                 priority_stack.push(priority_level + operator_mapping->priority);
                 CPPSCRIPT_DEBUG() << *iter << ":" << priority_level + operator_mapping->priority << "\n";
 
                 if (*iter == "(") {
-                    priority_level += operator_info_t::num_priority;
+                    priority_level += operator_t::num_priority;
                 } else if (*iter == ")") {
-                    priority_level -= operator_info_t::num_priority;
+                    priority_level -= operator_t::num_priority;
                 }
             }
-
-
         }
 
         return nullptr;
@@ -122,7 +208,6 @@ namespace cppscript{
     interpreter_t::interpreter_t() {
 
     }
-
 
 
 }

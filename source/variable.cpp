@@ -1,4 +1,5 @@
 #include <cppscript/variable.h>
+#include <cppscript/assert.h>
 
 ////
 //// Created by chudonghao on 17-6-15.
@@ -30,13 +31,27 @@
 ////}
 namespace cppscript{
 
-    void *function_call_t::value() {
-        if(!value_)
-            invoke();
-        return value_;
+    variable_t *get_variable(const std::string &name) {
+        CPPSCRIPT_ASSERT("todo");
+        return new variable_t;
     }
 
-    variable_t *get_variable(const std::string &name) {
-        return nullptr;
+    variable_instance_t::~variable_instance_t() {
+
+    }
+
+    variable_instance_t::variable_instance_t(variable_t *variable):variable_ptr(variable->value()) {}
+
+    variable_t::~variable_t() {
+
+    }
+
+    function_variable_instance_t::~function_variable_instance_t() {
+        for(variable_instance_t*arg:args)
+            delete arg;
+    }
+
+    void *function_variable_instance_t::ptr() {
+        return variable_instance_t::ptr();
     }
 }

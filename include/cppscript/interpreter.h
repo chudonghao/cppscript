@@ -11,6 +11,7 @@
 #include "cppscript.h"
 
 namespace cppscript{
+    class script_t;
     class interpreter_t{
     public:
         interpreter_t();

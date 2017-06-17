@@ -1,20 +1,15 @@
-////
-//// Created by chudonghao on 17-6-15.
-////
 //
-//#ifndef CPPSCRIPT_THREAD_H
-//#define CPPSCRIPT_THREAD_H
+// Created by chudonghao on 17-6-15.
 //
-//#include <stack>
-//#include <string>
-//#include <type_traits>
-//#include <vector>
-//#include "variable.h"
-//#include "operator.h"
-//#include "debug.h"
-//#include "cppscript.h"
-//
-//namespace cppscript {
+
+#ifndef CPPSCRIPT_THREAD_H
+#define CPPSCRIPT_THREAD_H
+
+
+
+namespace cppscript {
+
+
 //    class variable_t;
 //    class operator_t;
 //    class thread_t {
@@ -39,17 +34,17 @@
 //
 //        }
 //
-//        void push(cppscript::variable_t *value) {
-//            CPPSCRIPT_ASSERT(value != nullptr);
-//            value_stack.push((variable_t*)value);
+//        void push(cppscript::variable_t *ptr) {
+//            CPPSCRIPT_ASSERT(ptr != nullptr);
+//            value_stack.push((variable_t*)ptr);
 //        }
 //
-//        template<typename T, class = typename std::enable_if<std::is_same<cppscript::variable_t1, T>::value>::type>
+//        template<typename T, class = typename std::enable_if<std::is_same<cppscript::variable_t1, T>::ptr>::type>
 //        T *top() {
 //            return value_stack.top();
 //        }
 //    };
-//}
-//
-//
-//#endif //CPPSCRIPT_THREAD_H
+}
+
+
+#endif //CPPSCRIPT_THREAD_H
